@@ -6,6 +6,8 @@ _[EN]_ Realization of a program in C ++ in order to visualize graphs.
 
 _[FR]_ Réalisation d'un programme en C++ permettant de visualiser des graphes.
 
+![](Screenshot1.png)
+
 ### Usage/Utilisation
 
 _[EN]_
