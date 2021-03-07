@@ -16,7 +16,7 @@ _[EN]_
 - `E` = Add an edge
 - `D` = Delete a node
 - `Z` = Delete an edge
-- `C` = Color the graph (Work in progress)
+- `C` = Color the graph
 - `K` = Make a complete graph
 
 Clic anywhere in '`N`' mode to create a node.
@@ -27,7 +27,7 @@ Clic on two nodes in '`E`' mode to create an edge.
 
 Press on '`K`' will connect every node to every other node (except itself).
 
-Press on '`C`' will color the graph automatically. (Work in progress)
+Press on '`C`' will color the graph automatically.
 
 _[FR]_
 
@@ -35,7 +35,7 @@ _[FR]_
 - `E` = Ajouter une arête
 - `D` = Supprimer un nœud
 - `Z` = Supprimer une arête
-- `C` = Colore le graphe (En cour de développement)
+- `C` = Colore le graphe
 - `K` = Faire un graphe complet
 
 Cliquez n'importe où en mode '`N`' pour créer un nœud.
@@ -46,7 +46,7 @@ Cliquez sur deux nœuds en mode '`E`' pour créer une arête.
 
 Appuyez sur '`K`' pour connecter chaque nœud à tous les autres nœuds (sauf lui-même).
 
-Appuyez sur '`C`' pour colorer le graphe automatiquement. (En cour de développement)
+Appuyez sur '`C`' pour colorer le graphe automatiquement.
 
 ### Graphic display management/Gestion de l'affichage graphique
 
