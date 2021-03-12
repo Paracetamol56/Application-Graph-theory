@@ -225,7 +225,7 @@ public:
 		{
 			iNode->SetColor(-1);
 		}
-		
+
 		int CurrentColor = 0; // Première couleur (rouge)
 
 		pNodeVec unColored = GetUnColored(); // pNodeVec des noeuds non colorés
@@ -242,21 +242,40 @@ public:
 
 			//Noeuds encore possible à colorier avec cette couleur
 			pNodeVec otherUnColored = unColored;
-			
+
 			while (!otherUnColored.empty())
 			{
-				if (!m_graph.CheckNodesAreNeighbors(NodeToColor, otherUnColored.back()))
+				//On bute les voisins
+				for (auto itNode = otherUnColored.begin(); itNode != otherUnColored.end();)
 				{
-					CNode::pNode NodeToColor = otherUnColored.back();
-					otherUnColored.pop_back(); // Suppression du noeud
-					NodeToColor->SetColor(CurrentColor); //Coloriage du noeud avec le couleur actuelle
+					if (m_graph.CheckNodesAreNeighbors(NodeToColor, *itNode))
+					{
+						itNode = otherUnColored.erase(itNode);
+					}
+					else
+					{
+						++itNode;
+					}
 				}
-				else
+
+				if (!otherUnColored.empty())
 				{
+					NodeToColor = otherUnColored.back();
 					otherUnColored.pop_back();
+					for (auto itNode = otherUnColored.begin(); itNode != otherUnColored.end();)
+					{
+						if (*itNode == NodeToColor)
+						{
+							itNode = unColored.erase(itNode);
+						}
+						else
+						{
+							++itNode;
+						}
+					}
+					NodeToColor->SetColor(CurrentColor);
 				}
 			}
-
 			// Passage à la couleur suivante
 			++CurrentColor;
 			// Conservation des noeuds non coloré

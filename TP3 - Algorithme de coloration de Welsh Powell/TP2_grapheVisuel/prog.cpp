@@ -59,7 +59,32 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 			case evtRefresh:
 				pLibgraph->beginPaint();
 				{
+					pLibgraph->setFont(CString("Segoe UI"), 9.0f, font_styles::FontStyleBold);
 					tp.Draw();
+					pLibgraph->setFont(CString("Segoe UI"), 12.0f, font_styles::FontStyleRegular);
+					pLibgraph->drawString(CString(std::string("Nombre de noeuds : " + std::to_string(tp.GetGraph().GetNumberOfNodes()))), CPoint{ 10, pLibgraph->getSize().m_fHeight -30 });
+					pLibgraph->drawString(CString(std::string("Nombre d'arêtes : " + std::to_string(tp.GetGraph().GetNumberOfEdges()))), CPoint{ 10, pLibgraph->getSize().m_fHeight - 55 });
+					pLibgraph->setFont(CString("Segoe UI"), 12.0f, font_styles::FontStyleBold);
+					switch (etape)
+					{
+					case Etape::Noop:
+						pLibgraph->drawString(CString(std::string("Noop")), CPoint{ 10, 10 });
+						break;
+					case Etape::AddNode:
+						pLibgraph->drawString(CString(std::string("Ajouter un noeud")), CPoint{ 10, 10 });
+						break;
+					case Etape::AddEdge:
+						pLibgraph->drawString(CString(std::string("Ajouter une arête")), CPoint{ 10, 10 });
+						break;
+					case Etape::DeleteNode:
+						pLibgraph->drawString(CString(std::string("Supprimer un noeud")), CPoint{ 10, 10 });
+						break;
+					case Etape::DeleteEdge:
+						pLibgraph->drawString(CString(std::string("Supprimer une arête")), CPoint{ 10, 10 });
+						break;
+					default:
+						break;
+					}
 				}
 				pLibgraph->endPaint();
 				break;
@@ -106,6 +131,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 					pLibgraph->askForRefresh();
 					break;
 				}
+				pLibgraph->askForRefresh();
 				break;
 			case evtMouseDown:
 				switch (etape)
