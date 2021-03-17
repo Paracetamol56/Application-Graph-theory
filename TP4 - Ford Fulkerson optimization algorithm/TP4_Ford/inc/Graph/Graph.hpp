@@ -208,7 +208,7 @@ public:
 			size_t res = 0;
 			for (CEdge::pEdge iEdge : GetEdgesIn(m_pNodeEnd))
 			{
-				res += iEdge->GetWeight();
+				res += iEdge->GetFlux();
 			}
 			return res;
 		}
@@ -237,6 +237,32 @@ public:
 		SetNodeStart(nodeStart);
 		SetNodeEnd(nodeEnd);
 
+		std::list<CGraph::Chaine> AllChaine = GetAllChaine(m_pNodeStart, m_pNodeEnd);
+		
+		for (CGraph::Chaine Chaine : AllChaine)
+		{
+			std::list<std::pair<CEdge::pEdge, bool>> ListeEdges = GetListeEdgesFromChaine(Chaine);
+			size_t minimum = ListeEdges.begin()->first->GetWeight();
+			for (std::pair<CEdge::pEdge, bool> iEdgePair : ListeEdges)
+			{
+				size_t iEdgePairWeight = iEdgePair.first->GetWeight();
+				if (iEdgePairWeight < minimum)
+				{
+					minimum = iEdgePairWeight;
+				}
+			}
+			for (std::pair<CEdge::pEdge, bool> iEdgePair : ListeEdges)
+			{
+				if (iEdgePair.second == true)
+				{
+					iEdgePair.first->AddFlux(minimum);
+				}
+				else
+				{
+					iEdgePair.first->SubFlux(minimum);
+				}
+			}
+		}
 	}
 	
 protected : 
@@ -245,8 +271,27 @@ protected :
 
 	// TP 4 :
 	// TODO : Renvoie l'arête formée par les 2 noeuds ainsi que son sens
-	std::pair<CEdge::pEdge, bool> GetEdgeFromNodes(CNode::pNode pNode1, CNode::pNode pNode2)const {
-		std::pair<CEdge::pEdge, bool> pEdgeRetour = std::make_pair(nullptr, true); return pEdgeRetour; // A MODIFIER
+	std::pair<CEdge::pEdge, bool> GetEdgeFromNodes(CNode::pNode pNode1, CNode::pNode pNode2)const
+	{
+		for (auto iEdge : m_spEdges)
+		{
+			if (iEdge->GetFirstNode() == pNode1)
+			{
+				if (iEdge->GetSecondNode() == pNode2)
+				{
+					std::pair<CEdge::pEdge, bool> pEdgeRetour = std::make_pair(iEdge, true);
+					return pEdgeRetour;
+				}
+			}
+			else if (iEdge->GetFirstNode() == pNode2)
+			{
+				if (iEdge->GetSecondNode() == pNode1)
+				{
+					std::pair<CEdge::pEdge, bool> pEdgeRetour = std::make_pair(iEdge, false);
+					return pEdgeRetour;
+				}
+			}
+		}
 	}
 
 	// TP 4 :
@@ -257,8 +302,19 @@ protected :
 	//      :           on récupère l'arête avec son sens
 	//	    :             on l ajoute 
 	//      :             notre point d arrivée devient le point de départ de la prochaine arrête
-	std::list<std::pair<CEdge::pEdge, bool>> GetListeEdgesFromChaine(Chaine chaine) const {
-		std::list<std::pair<CEdge::pEdge, bool>> listeEdges; return listeEdges; // A MODIFIER
+	std::list<std::pair<CEdge::pEdge, bool>> GetListeEdgesFromChaine(Chaine chaine) const
+	{
+		std::list<std::pair<CEdge::pEdge, bool>> listeEdges;
+
+		std::list<CNode::pNode>::iterator CurrentNode = chaine.begin();
+		std::list<CNode::pNode>::iterator NextNode = std::next(CurrentNode);
+		while (NextNode != chaine.end())
+		{
+			listeEdges.push_back(GetEdgeFromNodes(*CurrentNode, *NextNode));
+			CurrentNode = NextNode;
+			NextNode = std::next(CurrentNode);
+		}
+		return listeEdges;
 	}
 
 	// TP 4 :
@@ -305,15 +361,39 @@ protected :
 
 	// TP 4 : GetEdgesIn
 	// TODO : Renvoie la liste de toutes les arêtes qui finissent en pNode
-	std::list<CEdge::pEdge> GetEdgesIn(CNode::pNode pNode)const { std::list<CEdge::pEdge> lAreteF; return lAreteF; }// A MODIFIER
+	std::list<CEdge::pEdge> GetEdgesIn(CNode::pNode pNode)const
+	{
+		std::list<CEdge::pEdge> lAreteF;
+		for (auto iEdge : m_spEdges)
+		{
+			if (iEdge->GetSecondNode() == pNode)
+			{
+				lAreteF.push_back(iEdge);
+			}
+		}
+		return lAreteF;
+	}
 	
 	// TP 4 : GetEdgesOut
 	// TODO : Renvoie la liste de toutes les arêtes qui partent de pNode
-	std::list<CEdge::pEdge> GetEdgesOut(CNode::pNode pNode)const { std::list<CEdge::pEdge> lAreteP; return lAreteP; }// A MODIFIER
+	std::list<CEdge::pEdge> GetEdgesOut(CNode::pNode pNode)const
+	{
+		std::list<CEdge::pEdge> lAreteP;
+		for (auto iEdge : m_spEdges)
+		{
+			if (iEdge->GetFirstNode() == pNode)
+			{
+				lAreteP.push_back(iEdge);
+			}
+		}
+		return lAreteP;
+	}// A MODIFIER
 
 	// TP 4 : IsInChaine
 	// TODO : Renvoie vrai si le noeud appartient à la chaine et faux sinon
-	bool IsInChaine(CNode::pNode pNode, Chaine chaine)const { return false; } // A MODIFIER
-
+	bool IsInChaine(CNode::pNode pNode, Chaine chaine)const
+	{
+		return (std::find(std::begin(chaine), std::end(chaine), pNode) != std::end(chaine));
+	}
 };
 
