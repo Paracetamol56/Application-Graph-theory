@@ -242,13 +242,13 @@ public:
 		for (CGraph::Chaine Chaine : AllChaine)
 		{
 			std::list<std::pair<CEdge::pEdge, bool>> ListeEdges = GetListeEdgesFromChaine(Chaine);
-			size_t minimum = ListeEdges.begin()->first->GetWeight();
+			size_t minimum = ListeEdges.begin()->first->GetWeight() - ListeEdges.begin()->first->GetFlux();
 			for (std::pair<CEdge::pEdge, bool> iEdgePair : ListeEdges)
 			{
 				size_t iEdgePairWeight = iEdgePair.first->GetWeight();
 				if (iEdgePairWeight < minimum)
 				{
-					minimum = iEdgePairWeight;
+					minimum =iEdgePair.first->GetWeight() - iEdgePair.first->GetFlux();
 				}
 			}
 			for (std::pair<CEdge::pEdge, bool> iEdgePair : ListeEdges)
